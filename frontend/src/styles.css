@@ -1,0 +1,8 @@
+:root { --primary: #1976d2; }
+body { font-family: system-ui, Arial, sans-serif; margin: 0; }
+header { background: var(--primary); color: #fff; padding: 12px 16px; display:flex; justify-content:space-between; align-items:center; }
+.container { max-width: 980px; margin: 16px auto; padding: 0 16px; }
+.btn { background: var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
+.input, textarea { width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; }
+nav a { color:#fff; margin-right:12px; text-decoration:none; }
+mark { background: #ff0; }
