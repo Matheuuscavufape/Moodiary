@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
-const API = (window as any)["BACKEND_API"] || 'http://localhost:8080';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly API = environment.apiUrl;
+
   constructor(private http: HttpClient, private router: Router) {}
 
   register(body: { email: string; password: string; fullName: string; }) {
-    return this.http.post(`${API}/auth/register`, body, { responseType: 'text' });
+    return this.http.post(`${this.API}/auth/register`, body, { responseType: 'text' });
   }
 
   login(body: { email: string; password: string; }) {
-    return this.http.post<any>(`${API}/auth/login`, body);
+    return this.http.post<any>(`${this.API}/auth/login`, body);
   }
 
   saveSession(token: string, user: any) {
@@ -22,6 +23,13 @@ export class AuthService {
     this.router.navigateByUrl('/diary');
   }
 
-  isLoggedIn() { return !!localStorage.getItem('token'); }
-  logout() { localStorage.removeItem('token'); localStorage.removeItem('user'); this.router.navigateByUrl('/login'); }
+  isLoggedIn() {
+    return !!localStorage.getItem('token');
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigateByUrl('/login');
+  }
 }
