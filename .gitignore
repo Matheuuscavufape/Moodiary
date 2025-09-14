@@ -1,0 +1,19 @@
+# Java / Maven
+target/
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
