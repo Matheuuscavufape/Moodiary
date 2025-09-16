@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { jwtInterceptor } from './app/auth/jwt.interceptor';
+import 'zone.js';
 
 bootstrapApplication(AppComponent, {
   providers: [
