@@ -52,14 +52,8 @@ public class EntryService {
       }
     }
 
-    return repo.search(
-            user,
-            emptyToNull(q),
-            from,
-            to,
-            PageRequest.of(page, size)
-        )
-        .map(this::toDTO);
+    return repo.search(user, emptyToNull(q), from, to, PageRequest.of(page, size))
+               .map(this::toDTO);
   }
 
   public EntryDTO get(User user, UUID id) {
@@ -88,7 +82,6 @@ public class EntryService {
   }
 
   public List<Map<String, Object>> moodSummary(User user, Integer year, Integer month) {
-    // Constrói intervalo [from, to) para média diária do mês/ano
     Instant from = null, to = null;
     if (year != null) {
       LocalDate start = LocalDate.of(year, (month != null ? month : 1), 1);

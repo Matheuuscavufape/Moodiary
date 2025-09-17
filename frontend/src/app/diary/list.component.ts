@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -44,27 +44,27 @@ import { HighlightPipe } from './pipes/highlight.pipe';
   </div>
   `
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
   q = '';
-  // use null como padrão (não undefined) pra não vazar "undefined" na URL
   day: number | null = null;
   month: number | null = null;
   year: number | null = null;
 
   entries: any[] = [];
 
-  constructor(private api: EntryService) { this.load(); }
+  constructor(private api: EntryService) {}
+
+  ngOnInit(): void {
+    this.load(); // chama aqui, não no constructor
+  }
 
   load(page = 0) {
-    // normaliza texto
     const q = (this.q || '').trim();
 
-    // normaliza números: vira number ou null
     const y = this.year !== null && this.year !== ('' as any) ? Number(this.year) : null;
     const m = y !== null && this.month !== null && this.month !== ('' as any) ? Number(this.month) : null;
     const d = y !== null && m !== null && this.day   !== null && this.day   !== ('' as any) ? Number(this.day)   : null;
 
-    // monta params só com o que existe (sem undefined!)
     const params: any = { page, size: 20 };
     if (q) params.q = q;
     if (y !== null) params.year = y;
