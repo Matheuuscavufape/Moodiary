@@ -38,7 +38,11 @@ public class EntryController {
       @RequestParam(required = false) Integer year,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size) {
-    return ResponseEntity.ok(service.search(currentUser(ud), q, year, month, day, page, size));
+
+         Integer y = year;
+         Integer m = (y == null) ? null : month;
+         Integer d = (y == null || m == null) ? null : day;
+    return ResponseEntity.ok(service.search(currentUser(ud), q, y, m, d, page, size));
   }
 
   @GetMapping("/{id}")

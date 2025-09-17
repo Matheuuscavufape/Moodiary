@@ -28,6 +28,7 @@ import { HighlightPipe } from './pipes/highlight.pipe';
       <input class="input" type="number" [(ngModel)]="year" min="1900" max="2100"/>
     </div>
     <button class="btn" (click)="load()">Buscar</button>
+    <button class="btn" (click)="clear()" type="button">Limpar</button>
     <a class="btn" routerLink="/diary/new">Nova entrada</a>
   </div>
 
@@ -44,11 +45,38 @@ import { HighlightPipe } from './pipes/highlight.pipe';
   `
 })
 export class ListComponent {
-  q=''; day: number|undefined; month: number|undefined; year: number|undefined;
+  q = '';
+  // use null como padrão (não undefined) pra não vazar "undefined" na URL
+  day: number | null = null;
+  month: number | null = null;
+  year: number | null = null;
+
   entries: any[] = [];
+
   constructor(private api: EntryService) { this.load(); }
-  load() {
-    const params: any = { q: this.q || undefined, day: this.day || undefined, month: this.month || undefined, year: this.year || undefined, page: 0, size: 20 };
+
+  load(page = 0) {
+    // normaliza texto
+    const q = (this.q || '').trim();
+
+    // normaliza números: vira number ou null
+    const y = this.year !== null && this.year !== ('' as any) ? Number(this.year) : null;
+    const m = y !== null && this.month !== null && this.month !== ('' as any) ? Number(this.month) : null;
+    const d = y !== null && m !== null && this.day   !== null && this.day   !== ('' as any) ? Number(this.day)   : null;
+
+    // monta params só com o que existe (sem undefined!)
+    const params: any = { page, size: 20 };
+    if (q) params.q = q;
+    if (y !== null) params.year = y;
+    if (m !== null) params.month = m;
+    if (d !== null) params.day = d;
+
     this.api.list(params).subscribe(res => this.entries = res.content || []);
+  }
+
+  clear() {
+    this.q = '';
+    this.day = this.month = this.year = null;
+    this.load(0);
   }
 }
