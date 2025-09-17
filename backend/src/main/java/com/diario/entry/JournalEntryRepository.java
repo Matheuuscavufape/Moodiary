@@ -1,3 +1,4 @@
+// src/main/java/com/diario/entry/JournalEntryRepository.java
 package com.diario.entry;
 
 import com.diario.user.User;
@@ -30,6 +31,10 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, UUID
       Pageable pageable
   );
 
+ 
+  Page<JournalEntry> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+
+  
   @Query("""
     select cast(e.createdAt as date) as dt, avg(e.mood) as avgMood
     from JournalEntry e

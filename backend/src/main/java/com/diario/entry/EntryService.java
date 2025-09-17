@@ -31,7 +31,7 @@ public class EntryService {
   }
 
   public Page<EntryDTO> search(User user, String q, Integer year, Integer month, Integer day, int page, int size) {
-    // Constrói intervalo [from, to) a partir de year/month/day
+    // 1) Constrói intervalo [from, to) conforme filtros
     Instant from = null, to = null;
     if (year != null) {
       LocalDate start;
@@ -52,8 +52,16 @@ public class EntryService {
       }
     }
 
-    return repo.search(user, emptyToNull(q), from, to, PageRequest.of(page, size))
-               .map(this::toDTO);
+    final String qNorm = emptyToNull(q);
+    final var pageable = PageRequest.of(page, size);
+
+    // 2) Fallback ultra-simples para o caso sem NENHUM filtro
+    if (qNorm == null && from == null && to == null) {
+      return repo.findByUserOrderByCreatedAtDesc(user, pageable).map(this::toDTO);
+    }
+
+    // 3) Demais casos usam a query com [from,to) e q
+    return repo.search(user, qNorm, from, to, pageable).map(this::toDTO);
   }
 
   public EntryDTO get(User user, UUID id) {
@@ -98,18 +106,12 @@ public class EntryService {
     }).toList();
   }
 
-  private String emptyToNull(String q) {
-    return (q == null || q.isBlank()) ? null : q;
-  }
+  private String emptyToNull(String q) { return (q == null || q.isBlank()) ? null : q; }
 
   private EntryDTO toDTO(JournalEntry e) {
     return new EntryDTO(
-        e.getId(),
-        e.getContent(),
-        e.getMood(),
-        e.isDraft(),
-        e.getCreatedAt(),
-        e.getUpdatedAt()
+        e.getId(), e.getContent(), e.getMood(), e.isDraft(),
+        e.getCreatedAt(), e.getUpdatedAt()
     );
   }
 }
