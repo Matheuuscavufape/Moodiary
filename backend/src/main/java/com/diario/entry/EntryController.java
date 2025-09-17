@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/entries")
+@RequestMapping("/entries")
 public class EntryController {
   @Autowired private EntryService service;
   @Autowired private UserRepository users;

@@ -4,11 +4,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record RegisterDTO(
-  @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "E-mail inválido")
+  @jakarta.validation.constraints.NotBlank
+  @jakarta.validation.constraints.Email(message = "E-mail inválido")
   String email,
-  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{8,}$",
-           message = "Senha fraca: min 8, maiúscula, minúscula, número e símbolo")
+
+  @jakarta.validation.constraints.NotBlank
+  @jakarta.validation.constraints.Pattern(
+    regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{8,}$",
+    message = "Senha fraca: min 8, maiúscula, minúscula, número e símbolo"
+  )
   String password,
-  @NotBlank(message = "Nome completo obrigatório")
+
+  @jakarta.validation.constraints.NotBlank(message = "Nome completo obrigatório")
   String fullName
 ) {}
